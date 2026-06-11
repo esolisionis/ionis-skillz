@@ -1,0 +1,111 @@
+{
+  "$schema": "Ionis brand color tokens — see references/visual_system.md for usage rules",
+  "version": "2025-02",
+  "primary": {
+    "raspberry": {
+      "role": "key brand color, logo, must be visibly featured on every slide",
+      "hex": "#A20067",
+      "rgb": [162, 0, 103],
+      "cmyk": [18, 100, 6, 18],
+      "pms": "235C"
+    },
+    "magenta": {
+      "role": "primary partner; interchangeable with raspberry as the featured color",
+      "hex": "#D70073",
+      "rgb": [215, 0, 115],
+      "cmyk": [12, 100, 24, 0],
+      "pms": "226C"
+    },
+    "orange": {
+      "role": "tertiary primary, warm accent for stat blocks and gradients",
+      "hex": "#FFAF00",
+      "rgb": [255, 175, 0],
+      "cmyk": [0, 35, 100, 0],
+      "pms": "124C"
+    }
+  },
+  "secondary_tints": {
+    "_usage": "backgrounds only, always paired with a primary",
+    "pink": {
+      "hex": "#FEE4FC",
+      "rgb": [254, 228, 252],
+      "cmyk": [1, 12, 0, 0],
+      "pms": "7436C"
+    },
+    "yellow": {
+      "hex": "#F5F08B",
+      "rgb": [245, 240, 139],
+      "cmyk": [6, 0, 57, 0],
+      "pms": "601C"
+    },
+    "green_tint": {
+      "hex": "#BEE169",
+      "rgb": [190, 225, 105],
+      "cmyk": [29, 0, 74, 0],
+      "pms": "374C"
+    },
+    "cool_gray_1": {
+      "role": "soft white substitute; wing watermark color",
+      "hex": "#EBECEE",
+      "rgb": [235, 236, 238],
+      "cmyk": [7, 4, 4, 0],
+      "pms": "Cool Gray 1"
+    }
+  },
+  "secondary_accents": {
+    "_usage": "typography, icons, rules, frames only. Never a slide's dominant color. Never over either red.",
+    "blue": {
+      "hex": "#71A6E7",
+      "rgb": [113, 166, 231],
+      "cmyk": [53, 26, 0, 0],
+      "pms": "284C"
+    },
+    "green": {
+      "hex": "#0EAA0E",
+      "rgb": [14, 170, 14],
+      "cmyk": [81, 4, 100, 0],
+      "pms": "354C"
+    },
+    "bright_yellow": {
+      "hex": "#EDF950",
+      "rgb": [237, 249, 80],
+      "cmyk": [11, 0, 80, 0],
+      "pms": "101C"
+    },
+    "cool_gray_11": {
+      "role": "default body text color. Never over either red — use black instead.",
+      "hex": "#53565A",
+      "rgb": [83, 86, 90],
+      "cmyk": [44, 34, 22, 77],
+      "pms": "Cool Gray 11"
+    }
+  },
+  "neutrals": {
+    "white": {
+      "role": "essential foil — even though not in the palette",
+      "hex": "#FFFFFF"
+    },
+    "black": {
+      "role": "for body text over Raspberry or Magenta only (where Cool Gray 11 is disallowed)",
+      "hex": "#000000"
+    },
+    "ink": {
+      "role": "near-black used in HTML decks for default heading color",
+      "hex": "#1A1A1A"
+    }
+  },
+  "pairing_rules": {
+    "must": [
+      "Raspberry or Magenta visibly featured on every slide (not just the logo)",
+      "Secondary tints always paired with a primary color somewhere on the surface",
+      "Solid colors only — gradients (color blends within a single shape, text fill, or bar) are not permitted by the current brand book"
+    ],
+    "never": [
+      "Raspberry over Magenta (or vice versa)",
+      "Secondary Blue, Secondary Green, or Bright Yellow over either red",
+      "Cool Gray 11 over either red — use black",
+      "Secondary colors (Blue, Green, Bright Yellow, Cool Gray 11) as a slide's dominant color",
+      "Linear or radial gradients in card backgrounds, top bars, title underlines, text fills, icons, or any other surface"
+    ]
+  }
+}

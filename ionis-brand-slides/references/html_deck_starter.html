@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<!--
+  Ionis HTML deck starter — single self-contained file. Pre-wired with:
+    - Brand tokens (colors, font stack, no gradients)
+    - Prow utility class — bottom-right rounded corner per brand book p.19
+    - Wing watermark recipe (matches PPT template exactly)
+    - Real IONIS logo in footer (not text)
+    - Eyebrow Prow on every content slide
+    - Bottom 88px safe area for footer + breathing room
+
+  Slide size: 1280 x 720 (16:9). Navigation: arrow keys / space / click.
+
+  Assets used (paths relative to this file):
+    ../assets/template-wing.png                  — Cool Gray 1 wing watermark
+    ../assets/logos/Ionis_Logo_web_HEX.svg       — 4-color IONIS lockup
+    ../assets/logos/Ionis_Logo_KO_RGB.svg        — white KO lockup for closing
+
+  For a complete worked example showing every layout, see examples/deck.html.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>[Deck Title] — Ionis</title>
+<link rel="stylesheet" href="css_tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--gray-11);
+    overflow: hidden;
+  }
+  .stage {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    perspective: 1500px;
+  }
+  .slide {
+    position: absolute;
+    width: min(1280px, 96vw);
+    height: min(720px, 96vh);
+    background: var(--white);
+    border-radius: 6px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.45), 0 8px 20px rgba(0,0,0,.3);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(60px) scale(.98);
+    transition: opacity .45s ease, transform .55s cubic-bezier(.2,.7,.2,1);
+    pointer-events: none;
+  }
+  .slide.active { opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
+  .slide.exit-left { opacity: 0; transform: translateX(-60px) scale(.98); }
+
+  /* Bottom 88px is the no-content safe area (footer + buffer). */
+  .slide-inner {
+    position: relative;
+    width: 100%; height: 100%;
+    padding: 54px 70px 88px 70px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Slide header — wordmark left, eyebrow Prow right */
+  .slide-head {
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 2; position: relative; margin-bottom: 22px;
+  }
+  .wordmark {
+    font-weight: 900; letter-spacing: -.02em;
+    font-size: 22px; color: var(--raspberry);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .wordmark::before {
+    content: ""; display: inline-block;
+    width: 15px; height: 30px;
+    background-image: url("../assets/logos/Ionis_Logo_Wing_RGB.svg");
+    background-repeat: no-repeat; background-position: center; background-size: contain;
+  }
+
+  /* Slide title — solid Raspberry rule (no gradient) */
+  h2.slide-title {
+    font-size: 46px; font-weight: 900;
+    letter-spacing: -.025em; line-height: 1.02;
+    color: var(--ink); max-width: 880px;
+    z-index: 2; position: relative;
+  }
+  h2.slide-title .accent { color: var(--raspberry); }
+  h2.slide-title::after {
+    content: ""; display: block;
+    width: 90px; height: 6px;
+    background: var(--raspberry);
+    margin-top: 16px; border-radius: 0 4px 4px 0;
+  }
+
+  .slide-body {
+    margin-top: 22px; z-index: 2; position: relative;
+    flex: 1; display: flex; flex-direction: column;
+    gap: 16px; min-height: 0;
+  }
+  p.lead {
+    font-size: 20px; font-weight: 500;
+    color: var(--gray-11); line-height: 1.4; max-width: 900px;
+  }
+
+  /* ===== Layout A — Title Slide ===== */
+  .title-slide { background: var(--white); }
+  /* Wing watermark — matches PPT template Section Header recipe exactly */
+  .title-slide::before {
+    content: ""; position: absolute;
+    top: 0; left: 0; width: 17.3%; height: 100%;
+    background-image: url("../assets/template-wing.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: auto 100%;
+    opacity: 1;
+    pointer-events: none; z-index: 0;
+  }
+  /* Solid Raspberry right-edge strip (no gradient) */
+  .title-slide::after {
+    content: ""; position: absolute;
+    right: 0; top: 0; bottom: 0; width: 14px;
+    background: var(--raspberry);
+    z-index: 3;
+  }
+  .title-slide .slide-inner > * { position: relative; z-index: 1; }
+  .title-slide .slide-inner {
+    justify-content: flex-start;
+    padding-top: 80px;
+  }
+  .title-slide h1 {
+    font-size: 104px; font-weight: 900;
+    letter-spacing: -.045em; line-height: .92;
+    color: var(--ink); margin-top: 12px;
+  }
+  .title-slide h1 .accent { color: var(--raspberry); }
+  .title-slide .lede {
+    margin-top: 30px; font-size: 28px; font-weight: 500;
+    max-width: 760px; color: var(--gray-11); line-height: 1.3;
+  }
+  .title-slide .slide-head .wordmark { font-size: 0; }
+  .title-slide .slide-head .wordmark::before {
+    width: 140px; height: 56px;
+    background-image: url("../assets/logos/Ionis_Logo_web_HEX.svg");
+  }
+  /* Optional Beta banner — a giant orange Prow above the title.
+     Use when the topic itself is in beta / preview. */
+  .title-slide .beta-banner {
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 18px 36px 18px 28px;
+    background: var(--orange);
+    color: var(--ink);
+    border-radius: 0 0 40px 0;       /* Prow — bottom-right rounded */
+    font-size: 28px; font-weight: 900;
+    letter-spacing: .04em; text-transform: uppercase;
+    align-self: flex-start;
+    margin-bottom: 28px;
+    box-shadow: 0 12px 32px rgba(255,175,0,.35);
+  }
+  .title-slide .beta-banner .dot {
+    width: 14px; height: 14px;
+    background: var(--raspberry); border-radius: 50%;
+    box-shadow: 0 0 0 5px rgba(162,0,103,.18);
+    flex-shrink: 0;
+  }
+  .title-slide .beta-banner .tag {
+    font-size: 13px; font-weight: 900;
+    letter-spacing: .22em;
+    padding: 4px 10px;
+    background: var(--ink); color: var(--orange);
+    border-radius: 0 0 8px 0;        /* mini Prow */
+  }
+  /* Title slide meta strip + co-presenter block */
+  .title-slide .meta {
+    margin-top: 30px;
+    display: flex; gap: 36px;
+    color: var(--gray-11);
+    font-size: 13px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+  }
+  .title-slide .meta span { color: var(--raspberry); }
+  .title-slide .presenters {
+    margin-top: 24px;
+    display: flex; gap: 56px;
+    align-items: flex-start;
+  }
+  .title-slide .presenter {
+    border-left: 3px solid var(--raspberry);
+    padding-left: 14px;
+  }
+  .title-slide .presenter:nth-child(2) { border-left-color: var(--orange); }
+  .title-slide .p-name {
+    font-size: 18px; font-weight: 900;
+    color: var(--ink); letter-spacing: -.01em; line-height: 1.1;
+  }
+  .title-slide .p-role {
+    margin-top: 2px;
+    font-size: 12px; font-weight: 700;
+    color: var(--gray-11); letter-spacing: .08em; text-transform: uppercase;
+  }
+
+  /* ===== Layout I — Closing Slide (band variant) ===== */
+  .closing { background: var(--white); color: var(--ink); }
+  .closing-band-top {
+    position: absolute; top: 0; left: 0; right: 0; height: 32%;
+    background: var(--raspberry);    /* solid — no gradient */
+    z-index: 0;
+  }
+  .closing-band-bottom {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 20%;
+    background: var(--raspberry);
+    z-index: 0;
+  }
+  .closing .closing-logo {
+    position: absolute; top: 9%; left: 50%;
+    transform: translateX(-50%);
+    width: 22%; height: 12%;
+    background-image: url("../assets/logos/Ionis_Logo_KO_RGB.svg");
+    background-repeat: no-repeat; background-position: center; background-size: contain;
+    z-index: 2;
+  }
+  .closing .closing-body {
+    position: absolute; top: 34%; left: 12.5%; right: 12.5%;
+    text-align: center; z-index: 2;
+  }
+  .closing h2 {
+    font-size: 46px; font-weight: 900;
+    line-height: 1.05; letter-spacing: -.025em;
+    color: var(--raspberry);
+  }
+  .closing .accent-orange { color: var(--orange); }
+  .closing .qa {
+    margin-top: 18px;
+    display: inline-block;
+    padding: 12px 28px 12px 22px;
+    background: var(--raspberry); color: var(--white);
+    border-radius: 0 0 18px 0;       /* Prow CTA — not a pill */
+    font-weight: 800; letter-spacing: .15em;
+    text-transform: uppercase; font-size: 12px;
+  }
+
+  /* Nav dots (the only place border-radius:999px survives) */
+  .nav {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    z-index: 100; display: flex; gap: 10px;
+    padding: 10px 16px; background: rgba(0,0,0,.35);
+    border-radius: 999px; backdrop-filter: blur(8px);
+  }
+  .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: rgba(255,255,255,.4); cursor: pointer;
+    transition: background .25s, transform .25s;
+  }
+  .dot.active { background: var(--orange); transform: scale(1.3); }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- ====== Slide 1: Title (Layout A) ====== -->
+  <section class="slide title-slide" data-idx="0">
+    <div class="slide-inner">
+      <div class="slide-head"><div class="wordmark" aria-label="Ionis"></div></div>
+
+      <!-- Optional beta banner — delete if not in preview/beta -->
+      <div class="beta-banner">
+        <span class="dot"></span>
+        <span class="tag">Beta</span>
+        New Feature Preview
+      </div>
+
+      <h1>[Deck Title<span class="accent">.</span>]</h1>
+      <p class="lede">[One-sentence subtitle that frames the deck.]</p>
+
+      <div class="meta">
+        <div><span>Section / Audience</span></div>
+        <div>Date</div>
+      </div>
+
+      <!-- Optional co-presenter block — delete if single-presenter -->
+      <div class="presenters">
+        <div class="presenter">
+          <div class="p-name">Presenter One</div>
+          <div class="p-role">Role / Title</div>
+        </div>
+        <div class="presenter">
+          <div class="p-name">Presenter Two</div>
+          <div class="p-role">Role / Title</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Slide 2: Content (replace with one of Layouts B–P) ====== -->
+  <section class="slide" data-idx="1">
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="wordmark">[SECTION]</div>
+        <div class="eyebrow">● 01 · [Topic]</div>
+      </div>
+      <h2 class="slide-title">[Headline — ≤ 7 words.]</h2>
+      <div class="slide-body">
+        <p class="lead">[Body copy — sparse, on-brand. See voice_examples.md.]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Slide N: Closing (Layout I) ====== -->
+  <section class="slide closing" data-idx="2">
+    <div class="closing-band-top"></div>
+    <div class="closing-band-bottom"></div>
+    <div class="closing-logo" aria-label="Ionis"></div>
+    <div class="closing-body">
+      <h2>[Closing question or signature phrase.]</h2>
+      <div class="qa">Discussion &amp; Q&amp;A</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav" id="nav"></div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const nav = document.getElementById('nav');
+  let current = 0;
+
+  // Auto-inject wing watermark + footer (with real IONIS logo) into every
+  // content slide. Skip title and closing — they own their canvas.
+  slides.forEach((slide, i) => {
+    if (slide.classList.contains('title-slide') || slide.classList.contains('closing')) return;
+    const inner = slide.querySelector('.slide-inner');
+
+    const wing = document.createElement('div');
+    wing.className = 'wing-graphic';
+    inner.appendChild(wing);
+
+    const footer = document.createElement('div');
+    footer.className = 'slide-footer';
+    footer.innerHTML = `
+      <span class="slide-footer-left">
+        <span class="footer-logo" aria-label="Ionis"></span>
+        <span class="sep">·</span>[Section]<span class="sep">·</span>[Date]
+      </span>
+      <span>${String(i+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}</span>
+    `;
+    inner.appendChild(footer);
+  });
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.addEventListener('click', () => go(i));
+    nav.appendChild(d);
+  });
+
+  function go(i) {
+    if (i < 0 || i >= slides.length) return;
+    slides[current].classList.remove('active');
+    if (i < current) slides[current].classList.add('exit-left');
+    else slides[current].classList.remove('exit-left');
+    current = i;
+    slides.forEach((s, idx) => {
+      s.classList.toggle('active', idx === current);
+      if (idx !== current) s.classList.remove('exit-left');
+    });
+    Array.from(nav.children).forEach((d, idx) => d.classList.toggle('active', idx === current));
+  }
+
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); go(current + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key))   { e.preventDefault(); go(current - 1); }
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End')  go(slides.length - 1);
+  });
+
+  document.getElementById('stage').addEventListener('click', e => {
+    if (e.target.closest('.dot')) return;
+    go(current + 1);
+  });
+
+  go(0);
+</script>
+</body>
+</html>

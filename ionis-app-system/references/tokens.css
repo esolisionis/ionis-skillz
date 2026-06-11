@@ -1,0 +1,188 @@
+/* ============================================================
+   IONIS APP SYSTEM — design tokens v1.0
+   Paste this block at the top of any single-file HTML app, or
+   load as a stylesheet. Everything downstream references ONLY
+   these variables — never raw values in components.
+   Palette verified against the Ionis Corporate Brand Portal (June 2026).
+   Brand anchors: Raspberry #A20067, Magenta #D70073 (PMS 235C/226C),
+   Cool Gray 1 #EBECEE, Cool Gray 11 #53565A.
+   ============================================================ */
+
+:root {
+  /* ---------- COLOR: NEUTRALS (anchored at Cool Gray 1 / 11) ---------- */
+  --gray-0:   #FFFFFF;
+  --gray-25:  #F7F8F9;
+  --gray-50:  #EBECEE;   /* Cool Gray 1 — brand */
+  --gray-100: #DDDFE2;
+  --gray-200: #C6C9CD;
+  --gray-300: #A9ADB3;
+  --gray-400: #8B9096;
+  --gray-500: #6E7278;
+  --gray-600: #53565A;   /* Cool Gray 11 — brand; default body text */
+  --gray-700: #3F4144;
+  --gray-800: #2B2D2F;
+  --gray-900: #1A1B1D;
+
+  /* ---------- COLOR: BRAND ACCENTS ---------- */
+  --raspberry:        #A20067;  /* primary interactive accent. 8.0:1 on white */
+  --raspberry-hover:  #8A0058;
+  --raspberry-active: #730049;
+  --raspberry-tint:   #FBEAF4;  /* selected/active backgrounds */
+  --magenta:          #D70073;  /* data viz, selected indicators, secondary accent.
+                                   4.9:1 on white — AA for normal text, use ≥14px */
+  --magenta-tint:     #FEE4FC;  /* Pink tint — brand */
+  --amber:            #FFAF00;  /* brand Orange/Yellow. NEVER as text on white —
+                                   fills, badges with dark text, and charts only */
+
+  /* ---------- COLOR: SEMANTIC (status) ---------- */
+  /* Brand green/blue are too light for text; these are darkened to pass AA. */
+  --success:      #0B7A0B;  /* derived from brand green #0EAA0E */
+  --success-tint: #E9F6E9;
+  --warning:      #9A6700;
+  --warning-tint: #FFF4D6;
+  --danger:       #C42B1C;
+  --danger-tint:  #FBEAE8;
+  --info:         #2E6BBF;  /* derived from brand blue #71A6E7 */
+  --info-tint:    #EAF1FB;
+
+  /* ---------- COLOR: SEMANTIC ALIASES (use these in components) ---------- */
+  --bg-app:        var(--gray-25);
+  --bg-surface:    var(--gray-0);    /* cards, panels, table bodies */
+  --bg-sunken:     var(--gray-50);   /* wells, code blocks, table headers */
+  --bg-hover:      rgba(83, 86, 90, 0.06);
+  --bg-active:     rgba(83, 86, 90, 0.10);
+  --bg-selected:   var(--raspberry-tint);
+  --text-primary:  var(--gray-600);  /* Cool Gray 11, per brand book */
+  --text-strong:   var(--gray-900);  /* headings, key numbers */
+  --text-secondary:var(--gray-500);
+  --text-muted:    var(--gray-400);  /* captions, placeholders. 3.5:1 — large/aux text only */
+  --text-inverse:  #FFFFFF;
+  --text-accent:   var(--raspberry);
+  --border-default:var(--gray-100);
+  --border-strong: var(--gray-200);
+  --border-accent: var(--raspberry);
+
+  /* ---------- SPACING (4px base — only these values, no arbitrary px) ---------- */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ---------- TYPOGRAPHY ---------- */
+  --font-ui: Inter, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-display: Gotham, Montserrat, var(--font-ui);
+  /* Brand typeface for designed materials is Gotham (licensed — request via
+     treigle@ionis.com). Use --font-display for page titles, KPI stats, and
+     hero text; Montserrat (free, geometrically similar) is the fallback when
+     Gotham isn't licensed for the deployment. UI text stays on --font-ui for
+     screen density and rendering. Arial is a PowerPoint constraint, not an
+     app requirement. */
+  --font-mono: "SF Mono", "Cascadia Code", Consolas, monospace;
+  --text-xs:   12px;  /* captions, table headers (uppercase), badges */
+  --text-sm:   13px;  /* dense UI, secondary text, table cells (dense) */
+  --text-base: 14px;  /* default UI text, table cells, inputs, buttons */
+  --text-md:   16px;  /* emphasized body, empty-state titles */
+  --text-lg:   20px;  /* section headings */
+  --text-xl:   24px;  /* page titles */
+  --text-2xl:  32px;  /* hero stats */
+  --text-stat: 40px;  /* dashboard KPI numbers */
+  --weight-regular: 400;
+  --weight-medium:  500;  /* interactive labels, table headers */
+  --weight-semibold: 600; /* headings, KPI numbers */
+  --leading-tight: 1.25;  /* headings, stats */
+  --leading-base:  1.5;   /* body */
+  --tracking-caps: 0.06em; /* uppercase labels only */
+  /* Numbers in tables/stats: font-variant-numeric: tabular-nums; ALWAYS. */
+
+  /* ---------- RADIUS ---------- */
+  --radius-sm:   4px;   /* badges, checkboxes, code spans */
+  --radius-md:   6px;   /* buttons, inputs, menu items */
+  --radius-lg:   8px;   /* cards, panels, modals */
+  --radius-xl:   12px;  /* page-level containers, hero cards */
+  --radius-full: 9999px;
+  /* Prow accent (brand flourish, use sparingly — hero cards, KPI callouts):
+     one corner only, e.g. border-radius: var(--radius-lg) var(--radius-xl)
+     var(--radius-lg) var(--radius-lg) is WRONG; correct Prow is three corners
+     at one radius + the leading corner large:
+     border-radius: 8px 32px 8px 8px;  (top-right prow, ascending callouts) */
+
+  /* ---------- ELEVATION (layered, low-opacity — Stripe-style) ---------- */
+  --shadow-1: 0 1px 2px rgba(26,27,29,0.05);                                  /* resting cards */
+  --shadow-2: 0 2px 4px rgba(26,27,29,0.05), 0 4px 12px rgba(26,27,29,0.08);  /* dropdowns, popovers, hover-lift */
+  --shadow-3: 0 4px 8px rgba(26,27,29,0.06), 0 12px 32px rgba(26,27,29,0.14); /* modals, command palettes */
+  /* Rule: shadow level communicates stacking, not decoration.
+     Resting content = shadow-1 or border only. Never shadow-3 on a static card. */
+
+  /* ---------- MOTION ---------- */
+  --duration-micro:    100ms;  /* hover tints, toggles, checkbox ticks */
+  --duration-standard: 150ms;  /* most transitions: menus, fades, color */
+  --duration-emphasis: 200ms;  /* panels sliding, accordion, tab content */
+  --duration-large:    300ms;  /* modals, drawers, page-level surfaces */
+  --ease-out:      cubic-bezier(0.2, 0, 0, 1);    /* entering elements */
+  --ease-in:       cubic-bezier(0.4, 0, 1, 1);    /* exiting elements */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);  /* moving/morphing */
+  /* Rules: animate transform & opacity (compositor), not width/height/top.
+     Nothing the user waits on. Spinners: delay 150ms before showing so
+     fast operations never flicker. */
+
+  /* ---------- FOCUS ---------- */
+  --focus-ring: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--raspberry);
+  /* 2px offset ring. Apply on :focus-visible ONLY (no ring on mouse click).
+     NEVER outline:none without this replacement. */
+
+  /* ---------- Z-INDEX ---------- */
+  --z-sticky:  100;   /* sticky table headers, toolbars */
+  --z-dropdown: 400;
+  --z-overlay: 800;   /* modal scrim */
+  --z-modal:   900;
+  --z-toast:   1000;
+}
+
+/* ---------- DARK THEME (terminal-aesthetic dashboards) ---------- */
+[data-theme="dark"] {
+  --bg-app:        #121316;
+  --bg-surface:    #1A1B1F;
+  --bg-sunken:     #0D0E10;
+  --bg-hover:      rgba(235,236,238,0.06);
+  --bg-active:     rgba(235,236,238,0.10);
+  --bg-selected:   rgba(215,0,115,0.14);
+  --text-primary:  #C6C9CD;
+  --text-strong:   #F2F3F5;
+  --text-secondary:#8B9096;
+  --text-muted:    #6E7278;
+  --text-accent:   #FF4FA3;  /* lightened raspberry/magenta for dark-bg contrast */
+  --border-default:#2B2D32;
+  --border-strong: #3F424A;
+  --raspberry-tint:rgba(162,0,103,0.18);
+  --success: #4CC38A; --success-tint: rgba(76,195,138,0.12);
+  --warning: #F5C518; --warning-tint: rgba(245,197,24,0.12);
+  --danger:  #FF6B5E; --danger-tint:  rgba(255,107,94,0.12);
+  --info:    #71A6E7; --info-tint:    rgba(113,166,231,0.12);
+  /* Dark mode: elevation via borders + lighter surfaces, shadows are weak */
+  --shadow-1: 0 0 0 1px var(--border-default);
+  --shadow-2: 0 0 0 1px var(--border-strong), 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-3: 0 0 0 1px var(--border-strong), 0 12px 32px rgba(0,0,0,0.6);
+  --focus-ring: 0 0 0 2px var(--bg-surface), 0 0 0 4px #FF4FA3;
+}
+
+/* ---------- BASELINE APPLICATION ---------- */
+* { box-sizing: border-box; }
+body {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  color: var(--text-primary);
+  background: var(--bg-app);
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

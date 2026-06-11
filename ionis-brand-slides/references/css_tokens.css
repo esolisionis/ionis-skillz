@@ -1,0 +1,161 @@
+/* Ionis brand tokens — drop-in for any HTML deck or web surface.
+   See references/visual_system.md for the rules behind these patterns.
+   Hard requirements: NO gradients (solid colors only); Prow rounded
+   BOTTOM-RIGHT only; wing watermark matches the PPT template recipe. */
+
+:root {
+  /* Primary colors — Raspberry or Magenta MUST be visibly featured on every slide. */
+  --raspberry: #A20067;   /* PMS 235C — key brand color */
+  --magenta:   #D70073;   /* PMS 226C — primary partner */
+  --orange:    #FFAF00;   /* PMS 124C — warm accent */
+
+  /* Secondary tints — backgrounds only, always paired with a primary. */
+  --pink:      #FEE4FC;   /* PMS 7436C */
+  --yellow:    #F5F08B;   /* PMS 601C */
+  --lime:      #BEE169;   /* PMS 374C */
+  --gray-1:    #EBECEE;   /* Cool Gray 1 — soft white, wing watermark color */
+
+  /* Secondary accents — typography, icons, rules, frames only. */
+  --blue:      #71A6E7;   /* PMS 284C */
+  --green:     #0EAA0E;   /* PMS 354C */
+  --bright-yellow: #EDF950; /* PMS 101C */
+  --gray-11:   #53565A;   /* Cool Gray 11 — body text */
+
+  /* Neutrals */
+  --white:     #ffffff;
+  --black:     #000000;
+  --ink:       #1a1a1a;   /* near-black for headings */
+}
+
+/* Gradients are not permitted by the current Ionis brand book. Use solid
+   primary colors only (Raspberry, Magenta, Orange). Color rhythm across
+   a slide is achieved by varying solid tints across cards, not by blending
+   colors within a single shape. */
+
+/* Default font stack — Arial-first so HTML decks match the PPT template. */
+body, .slide {
+  font-family: Arial, 'Helvetica Neue', 'Gotham', sans-serif;
+  color: var(--ink);
+}
+
+/* ===== The Prow — Ionis's signature brand shape per brand book p.19 =====
+   Rectangle with ONE rounded corner pointing in the direction of forward
+   motion. Brand book convention: BOTTOM-RIGHT. Used as a repeating signature
+   shape across the deck — eyebrows, cards, CTAs, banners. */
+.prow {
+  background: var(--raspberry);
+  border-radius: 0 0 24px 0;          /* default: bottom-right rounded */
+  color: var(--white);
+}
+.prow.tr { border-radius: 0 24px 0 0; }   /* top-right (rare) */
+.prow.tl { border-radius: 24px 0 0 0; }
+.prow.bl { border-radius: 0 0 0 24px; }
+.prow.lg { border-radius: 0 0 60px 0; }   /* larger Prow corner */
+.prow.orange { background: var(--orange); color: var(--ink); }
+.prow.magenta { background: var(--magenta); }
+.prow.tint-pink { background: var(--pink); color: var(--raspberry); }
+
+/* Slide-title underline rule — solid Raspberry. */
+.slide-title-rule {
+  display: block;
+  width: 90px;
+  height: 6px;
+  background: var(--raspberry);
+  margin-top: 16px;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Wing watermark — matches the official Ionis PPT template's Section Header
+   layout exactly: image at x=0/y=0, 17.3% width, 100% height, right-anchored
+   background-position for the alt-crop view. */
+.wing-graphic {
+  position: absolute;
+  left: 0; top: 0;
+  width: 17.3%;                       /* 221/1280, matches template */
+  height: 100%;
+  background-image: url("../assets/template-wing.png");
+  background-repeat: no-repeat;
+  background-position: right top;     /* alt-crop — right ~60% of source */
+  background-size: auto 100%;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Footer — every content slide. Bottom 12% of slide reserved as no-content zone.
+   The "Ionis" prefix is rendered as the actual logo SVG, not text. */
+.slide-footer {
+  position: absolute;
+  bottom: 16px;
+  left: 70px;
+  right: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gray-11);
+  z-index: 2;
+  pointer-events: none;
+}
+.slide-footer .sep { color: var(--gray-11); opacity: .45; margin: 0 10px; }
+.slide-footer .slide-footer-left { display: inline-flex; align-items: center; }
+.slide-footer .footer-logo {
+  display: inline-block;
+  width: 42px;
+  height: 17px;
+  background-image: url("../assets/logos/Ionis_Logo_web_HEX.svg");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: contain;
+  vertical-align: middle;
+}
+
+/* Eyebrow is itself a Prow (bottom-right corner rounded) — the deck's small
+   repeating brand-signature shape. Section/slide marker in top-right of
+   content slides. */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: 8px 18px 8px 14px;
+  background: var(--raspberry);
+  border-radius: 0 0 16px 0;          /* Prow: only bottom-right rounded */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+/* Card-style Prow utilities — for cards in compare/gallery/why grids etc.
+   Default 2px Cool Gray 1 border on white background, bottom-right Prow. */
+.card-prow {
+  background: var(--white);
+  border: 2px solid var(--gray-1);
+  border-radius: 0 0 24px 0;          /* Prow */
+  padding: 22px 24px;
+  position: relative;
+}
+
+/* Quote-pull — pink tinted callout with orange left border. Used for
+   emphasis pulls, signature phrases, or "what to remember" lines. */
+.quote-pull {
+  padding: 18px 24px;
+  background: var(--pink);
+  border-left: 6px solid var(--orange);
+  border-radius: 0 8px 8px 0;
+  color: var(--gray-11);
+  font-size: 15px;
+  line-height: 1.5;
+  box-shadow: 0 4px 14px rgba(255,175,0,.12);
+}
+.quote-pull strong { color: var(--raspberry); }
