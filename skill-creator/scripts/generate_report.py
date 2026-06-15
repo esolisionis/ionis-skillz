@@ -13,23 +13,23 @@ import sys
 from pathlib import Path
 
 
-def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") -> str:
+def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = '') -> str:
     """Generate HTML report from loop output data. If auto_refresh is True, adds a meta refresh tag."""
-    history = data.get("history", [])
-    holdout = data.get("holdout", 0)
-    title_prefix = html.escape(skill_name + " \u2014 ") if skill_name else ""
+    history = data.get('history', [])
+    holdout = data.get('holdout', 0)
+    title_prefix = html.escape(skill_name + ' \u2014 ') if skill_name else ''
 
     # Get all unique queries from train and test sets, with should_trigger info
     train_queries: list[dict] = []
     test_queries: list[dict] = []
     if history:
-        for r in history[0].get("train_results", history[0].get("results", [])):
-            train_queries.append({"query": r["query"], "should_trigger": r.get("should_trigger", True)})
-        if history[0].get("test_results"):
-            for r in history[0].get("test_results", []):
-                test_queries.append({"query": r["query"], "should_trigger": r.get("should_trigger", True)})
+        for r in history[0].get('train_results', history[0].get('results', [])):
+            train_queries.append({'query': r['query'], 'should_trigger': r.get('should_trigger', True)})
+        if history[0].get('test_results'):
+            for r in history[0].get('test_results', []):
+                test_queries.append({'query': r['query'], 'should_trigger': r.get('should_trigger', True)})
 
-    refresh_tag = '    <meta http-equiv="refresh" content="5">\n' if auto_refresh else ""
+    refresh_tag = '    <meta http-equiv="refresh" content="5">\n' if auto_refresh else ''
 
     html_parts = ["""<!DOCTYPE html>
 <html>
@@ -189,12 +189,12 @@ def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") 
 
     # Add column headers for train queries
     for qinfo in train_queries:
-        polarity = "positive-col" if qinfo["should_trigger"] else "negative-col"
+        polarity = 'positive-col' if qinfo['should_trigger'] else 'negative-col'
         html_parts.append(f'                <th class="{polarity}">{html.escape(qinfo["query"])}</th>\n')
 
     # Add column headers for test queries (different color)
     for qinfo in test_queries:
-        polarity = "positive-col" if qinfo["should_trigger"] else "negative-col"
+        polarity = 'positive-col' if qinfo['should_trigger'] else 'negative-col'
         html_parts.append(f'                <th class="test-col {polarity}">{html.escape(qinfo["query"])}</th>\n')
 
     html_parts.append("""            </tr>
@@ -204,34 +204,34 @@ def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") 
 
     # Find best iteration for highlighting
     if test_queries:
-        best_iter = max(history, key=lambda h: h.get("test_passed") or 0).get("iteration")
+        best_iter = max(history, key=lambda h: h.get('test_passed') or 0).get('iteration')
     else:
-        best_iter = max(history, key=lambda h: h.get("train_passed", h.get("passed", 0))).get("iteration")
+        best_iter = max(history, key=lambda h: h.get('train_passed', h.get('passed', 0))).get('iteration')
 
     # Add rows for each iteration
     for h in history:
-        iteration = h.get("iteration", "?")
-        train_passed = h.get("train_passed", h.get("passed", 0))
-        train_total = h.get("train_total", h.get("total", 0))
-        test_passed = h.get("test_passed")
-        test_total = h.get("test_total")
-        description = h.get("description", "")
-        train_results = h.get("train_results", h.get("results", []))
-        test_results = h.get("test_results", [])
+        iteration = h.get('iteration', '?')
+        train_passed = h.get('train_passed', h.get('passed', 0))
+        train_total = h.get('train_total', h.get('total', 0))
+        test_passed = h.get('test_passed')
+        test_total = h.get('test_total')
+        description = h.get('description', '')
+        train_results = h.get('train_results', h.get('results', []))
+        test_results = h.get('test_results', [])
 
         # Create lookups for results by query
-        train_by_query = {r["query"]: r for r in train_results}
-        test_by_query = {r["query"]: r for r in test_results} if test_results else {}
+        train_by_query = {r['query']: r for r in train_results}
+        test_by_query = {r['query']: r for r in test_results} if test_results else {}
 
         # Compute aggregate correct/total runs across all retries
         def aggregate_runs(results: list[dict]) -> tuple[int, int]:
             correct = 0
             total = 0
             for r in results:
-                runs = r.get("runs", 0)
-                triggers = r.get("triggers", 0)
+                runs = r.get('runs', 0)
+                triggers = r.get('triggers', 0)
                 total += runs
-                if r.get("should_trigger", True):
+                if r.get('should_trigger', True):
                     correct += triggers
                 else:
                     correct += runs - triggers
@@ -245,15 +245,15 @@ def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") 
             if total > 0:
                 ratio = correct / total
                 if ratio >= 0.8:
-                    return "score-good"
+                    return 'score-good'
                 elif ratio >= 0.5:
-                    return "score-ok"
-            return "score-bad"
+                    return 'score-ok'
+            return 'score-bad'
 
         train_class = score_class(train_correct, train_runs)
         test_class = score_class(test_correct, test_runs)
 
-        row_class = "best-row" if iteration == best_iter else ""
+        row_class = 'best-row' if iteration == best_iter else ''
 
         html_parts.append(f"""            <tr class="{row_class}">
                 <td>{iteration}</td>
@@ -264,29 +264,29 @@ def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") 
 
         # Add result for each train query
         for qinfo in train_queries:
-            r = train_by_query.get(qinfo["query"], {})
-            did_pass = r.get("pass", False)
-            triggers = r.get("triggers", 0)
-            runs = r.get("runs", 0)
+            r = train_by_query.get(qinfo['query'], {})
+            did_pass = r.get('pass', False)
+            triggers = r.get('triggers', 0)
+            runs = r.get('runs', 0)
 
-            icon = "✓" if did_pass else "✗"
-            css_class = "pass" if did_pass else "fail"
+            icon = '✓' if did_pass else '✗'
+            css_class = 'pass' if did_pass else 'fail'
 
             html_parts.append(f'                <td class="result {css_class}">{icon}<span class="rate">{triggers}/{runs}</span></td>\n')
 
         # Add result for each test query (with different background)
         for qinfo in test_queries:
-            r = test_by_query.get(qinfo["query"], {})
-            did_pass = r.get("pass", False)
-            triggers = r.get("triggers", 0)
-            runs = r.get("runs", 0)
+            r = test_by_query.get(qinfo['query'], {})
+            did_pass = r.get('pass', False)
+            triggers = r.get('triggers', 0)
+            runs = r.get('runs', 0)
 
-            icon = "✓" if did_pass else "✗"
-            css_class = "pass" if did_pass else "fail"
+            icon = '✓' if did_pass else '✗'
+            css_class = 'pass' if did_pass else 'fail'
 
             html_parts.append(f'                <td class="result test-result {css_class}">{icon}<span class="rate">{triggers}/{runs}</span></td>\n')
 
-        html_parts.append("            </tr>\n")
+        html_parts.append('            </tr>\n')
 
     html_parts.append("""        </tbody>
     </table>
@@ -298,17 +298,17 @@ def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") 
 </html>
 """)
 
-    return "".join(html_parts)
+    return ''.join(html_parts)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate HTML report from run_loop output")
-    parser.add_argument("input", help="Path to JSON output from run_loop.py (or - for stdin)")
-    parser.add_argument("-o", "--output", default=None, help="Output HTML file (default: stdout)")
-    parser.add_argument("--skill-name", default="", help="Skill name to include in the report title")
+    parser = argparse.ArgumentParser(description='Generate HTML report from run_loop output')
+    parser.add_argument('input', help='Path to JSON output from run_loop.py (or - for stdin)')
+    parser.add_argument('-o', '--output', default=None, help='Output HTML file (default: stdout)')
+    parser.add_argument('--skill-name', default='', help='Skill name to include in the report title')
     args = parser.parse_args()
 
-    if args.input == "-":
+    if args.input == '-':
         data = json.load(sys.stdin)
     else:
         data = json.loads(Path(args.input).read_text())
@@ -317,10 +317,10 @@ def main():
 
     if args.output:
         Path(args.output).write_text(html_output)
-        print(f"Report written to {args.output}", file=sys.stderr)
+        print(f'Report written to {args.output}', file=sys.stderr)
     else:
         print(html_output)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

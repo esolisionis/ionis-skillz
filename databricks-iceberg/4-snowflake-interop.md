@@ -191,12 +191,12 @@ DESCRIBE EXTERNAL VOLUME <your-external-volume-name>;
 
 ### Step 2: Create a Storage Credential
 
-Create a storage credential for the cloud storage where Snowflake stores its Iceberg data. Assuming that the IAM role already exists. Follow the documentation for details (https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/s3/s3-external-location-manual)
+Create a storage credential for the cloud storage where Snowflake stores its Iceberg data. Assuming that the IAM role already exists. Follow the documentation for details (https://docs.databricks.com/connect/unity-catalog/cloud-storage/s3/s3-external-location-manual)
 
 ```bash
 # In Databricks CLI (AWS example)
 databricks storage-credentials create snowflake_storage_cred \
-  --aws-iam-role-arn "arn:aws:iam::123456789012:role/snowflake-data-access"
+  --json '{"aws_iam_role": {"role_arn": "arn:aws:iam::123456789012:role/snowflake-data-access"}}'
 ```
 
 ### Step 3: Create an External Location

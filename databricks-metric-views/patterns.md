@@ -397,7 +397,7 @@ ORDER BY ALL
 
 ## Pattern 9: Window Measures (Experimental)
 
-Window measures enable moving averages, running totals, period-over-period changes, and semiadditive measures. Add a `window` block to any measure definition. See [Window Measures Documentation](https://docs.databricks.com/aws/en/metric-views/data-modeling/window-measures).
+Window measures enable moving averages, running totals, period-over-period changes, and semiadditive measures. Add a `window` block to any measure definition. See [Window Measures Documentation](https://docs.databricks.com/metric-views/data-modeling/window-measures).
 
 ### Window Range Values
 
@@ -579,73 +579,81 @@ GROUP BY ALL
 ORDER BY ALL
 ```
 
-## MCP Tool Examples
+## SQL Examples
 
 ### Create with joins
 
-```python
-manage_metric_views(
-    action="create",
-    full_name="catalog.schema.sales_metrics",
-    source="catalog.schema.fact_sales",
-    or_replace=True,
-    joins=[
-        {
-            "name": "customer",
-            "source": "catalog.schema.dim_customer",
-            "on": "source.customer_id = customer.id"
-        },
-        {
-            "name": "product",
-            "source": "catalog.schema.dim_product",
-            "on": "source.product_id = product.id"
-        }
-    ],
-    dimensions=[
-        {"name": "Customer Segment", "expr": "customer.segment"},
-        {"name": "Product Category", "expr": "product.category"},
-        {"name": "Sale Month", "expr": "DATE_TRUNC('MONTH', source.sale_date)"},
-    ],
-    measures=[
-        {"name": "Total Revenue", "expr": "SUM(source.amount)"},
-        {"name": "Order Count", "expr": "COUNT(1)"},
-        {"name": "Unique Customers", "expr": "COUNT(DISTINCT source.customer_id)"},
-    ],
-)
+```sql
+CREATE OR REPLACE VIEW catalog.schema.sales_metrics
+WITH METRICS
+LANGUAGE YAML
+AS $$
+  version: 1.1
+  source: catalog.schema.fact_sales
+  joins:
+    - name: customer
+      source: catalog.schema.dim_customer
+      on: source.customer_id = customer.id
+    - name: product
+      source: catalog.schema.dim_product
+      on: source.product_id = product.id
+  dimensions:
+    - name: Customer Segment
+      expr: customer.segment
+    - name: Product Category
+      expr: product.category
+    - name: Sale Month
+      expr: DATE_TRUNC('MONTH', source.sale_date)
+  measures:
+    - name: Total Revenue
+      expr: SUM(source.amount)
+    - name: Order Count
+      expr: COUNT(1)
+    - name: Unique Customers
+      expr: COUNT(DISTINCT source.customer_id)
+$$;
 ```
 
 ### Alter to add a new measure
 
-```python
-manage_metric_views(
-    action="alter",
-    full_name="catalog.schema.sales_metrics",
-    source="catalog.schema.fact_sales",
-    joins=[
-        {"name": "customer", "source": "catalog.schema.dim_customer", "on": "source.customer_id = customer.id"},
-    ],
-    dimensions=[
-        {"name": "Customer Segment", "expr": "customer.segment"},
-        {"name": "Sale Month", "expr": "DATE_TRUNC('MONTH', source.sale_date)"},
-    ],
-    measures=[
-        {"name": "Total Revenue", "expr": "SUM(source.amount)"},
-        {"name": "Order Count", "expr": "COUNT(1)"},
-        {"name": "Average Order Value", "expr": "AVG(source.amount)"},  # New measure
-    ],
-)
+```sql
+-- Use CREATE OR REPLACE to update the metric view
+CREATE OR REPLACE VIEW catalog.schema.sales_metrics
+WITH METRICS
+LANGUAGE YAML
+AS $$
+  version: 1.1
+  source: catalog.schema.fact_sales
+  joins:
+    - name: customer
+      source: catalog.schema.dim_customer
+      on: source.customer_id = customer.id
+  dimensions:
+    - name: Customer Segment
+      expr: customer.segment
+    - name: Sale Month
+      expr: DATE_TRUNC('MONTH', source.sale_date)
+  measures:
+    - name: Total Revenue
+      expr: SUM(source.amount)
+    - name: Order Count
+      expr: COUNT(1)
+    - name: Average Order Value
+      expr: AVG(source.amount)
+$$;
 ```
 
 ### Query with filters
 
-```python
-manage_metric_views(
-    action="query",
-    full_name="catalog.schema.sales_metrics",
-    query_measures=["Total Revenue", "Order Count"],
-    query_dimensions=["Customer Segment", "Sale Month"],
-    where="`Customer Segment` = 'Enterprise'",
-    order_by="ALL",
-    limit=50,
-)
+```sql
+SELECT
+  `Customer Segment`,
+  `Sale Month`,
+  MEASURE(`Total Revenue`) AS total_revenue,
+  MEASURE(`Order Count`) AS order_count
+FROM catalog.schema.sales_metrics
+WHERE `Customer Segment` = 'Enterprise'
+GROUP BY ALL
+ORDER BY ALL
+LIMIT 50;
 ```
